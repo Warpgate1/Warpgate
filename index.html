@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Docs</title>
+  <link rel="icon" href="https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x16.png">
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js">
+function updateSpaceClock() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayName = weekdays[now.getDay()];
+  const dateNum = now.getDate();
+  document.getElementById("space-day").textContent = `${dayName}, ${dateNum}`;
+}
+setInterval(updateSpaceClock, 1000);
+updateSpaceClock();
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js">
+function updateSpaceClock() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayName = weekdays[now.getDay()];
+  const dateNum = now.getDate();
+  document.getElementById("space-day").textContent = `${dayName}, ${dateNum}`;
+}
+setInterval(updateSpaceClock, 1000);
+updateSpaceClock();
+
+</script>
+  <style>
+    body {
+      background-color: #f1f3f4;
+      font-family: Arial, sans-serif;
+      color: #202124;
+      margin: 0;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: transparent;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      width: 40px;
+      margin-right: 10px;
+    }
+
+    .title {
+      font-size: 1.5em;
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: transparent;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .link-box {
+      padding: 20px;
+      margin: 15px 0;
+      background-color: #e8f0fe;
+      border-radius: 6px;
+      text-align: center;
+      transition: background 0.2s;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+
+    .link-box:hover {
+      background-color: #d2e3fc;
+    }
+
+    a {
+      text-decoration: none;
+      color: #1a73e8;
+      font-weight: bold;
+    }
+
+    .login {
+      max-width: 400px;
+      margin: 100px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    input[type="password"], input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+
+    .iframe-container {
+      height: 800px;
+      width: 100%;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .dev-tools {
+      margin-top: 30px;
+      padding: 20px;
+      border: 2px dashed #1a73e8;
+      border-radius: 8px;
+      background-color: #f0f8ff;
+    }
+
+    .dev-tools h3 {
+      margin-top: 0;
+    }
+
+    .back-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    
+
+  #starCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1000; /* Push it far back */
+    background: black;
+    display: block;
+  }
+    
+       html, body, *, *:hover, *:active, *:focus {
+    cursor: url('https://cdn.glitch.global/4cd08d77-a460-4caf-a436-faf2f608b367/Spaceship--cursor--SweezyCursors%20(1).png?v=1747510031624') 16 16, auto; !important;
+  }
+
+  .cursor-trail {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 8px white;
+    animation: fadeOut 0.6s linear forwards;
+  }
+
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: scale(2);
+    }
+  }
+    
+  
+#online-users {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00f0ff;
+  text-align: center;
+  z-index: 9999;
+}
+
+
+#space-clock {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00f0ff;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-family: 'Courier New', monospace;
+  color: #00f0ff;
+  text-align: center;
+  box-shadow: 0 0 15px #00f0ff;
+  z-index: 9999;
+  user-select: none;
+}
+#clock {
+  font-size: 1.5em;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px #00f0ff;
+}
+#space-day {
+  font-size: 0.9em;
+  margin-top: 5px;
+  text-shadow: 0 0 5px #00f0ff;
+}
+
+</style>
+</head>
+<body>
+
+<div id="space-clock">
+  <div id="clock">--:--:--</div>
+  <div id="space-day">Loading...</div>
+</div>
+
+<div id="online-users">🟢 Users Online: Loading...</div>
+<canvas id="starCanvas"></canvas>
+<style>
+  #starCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -9999;
+    background: black;
+    pointer-events: none;
+  }
+
+#online-users {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00f0ff;
+  text-align: center;
+  z-index: 9999;
+}
+
+
+#space-clock {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00f0ff;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-family: 'Courier New', monospace;
+  color: #00f0ff;
+  text-align: center;
+  box-shadow: 0 0 15px #00f0ff;
+  z-index: 9999;
+  user-select: none;
+}
+#clock {
+  font-size: 1.5em;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px #00f0ff;
+}
+#space-day {
+  font-size: 0.9em;
+  margin-top: 5px;
+  text-shadow: 0 0 5px #00f0ff;
+}
+
+</style>
+
+
+ <!-- Starry background overlay -->
+<div id="announcementOverlay" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, #000000 0%, #1a1a1a 100%);
+  overflow: hidden;
+  z-index: 999;
+"> 
+  <canvas id="starCanvas" style="
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+  "></canvas>
+  
+  <canvas id="starCanvas2"></canvas>
+
+  <!-- Centered announcement box -->
+  <div id="announcementPopup" style="
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px 5px #ffd700;
+    max-width: 400px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 1.2em;
+    color: #333;
+  ">
+    ⭐ Welcome to Version 2.2! Added Little Side Games, A Secret Passcode, Press Esc + Tab, and A Cool Background! Look Very Hard For the Passcode!⭐
+    <br><br>
+    <button id="closeAnnouncement" style="
+      background: #ffd700;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1em;
+      box-shadow: 0 0 10px #ffdd55;
+    ">Close</button>
+  </div>
+</div>
+  
+  
+  <div class="header">
+    <img src="https://ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_document_x16.png" class="logo">
+    <div class="title">Google Docs</div>
+  </div>
+  
+  
+     
+  <!-- Password Login -->
+  <div class="login" id="loginBox">
+    <h2>Sign in to access this document</h2>
+    <input type="password" id="password" placeholder="Enter password">
+    <br>
+    <button onclick="checkPassword()">Enter</button>
+    <div class="link-box" onclick="openBlankTab('https://western-polar-honesty.glitch.me/')">
+      <a href="javascript:void(0);">Reaction Time Test</a>
+    </div>
+    <div class="link-box" onclick="openBlankTab('https://freezing-branched-stocking.glitch.me')">
+      <a href="javascript:void(0);">Fullscreen</a>
+    </div>
+    <div class="link-box" onclick="openBlankTab('https://docs.google.com/forms/d/e/1FAIpQLSelRKktni1xyVJGXCvsK2uG3-sXI6OR8Bb7OEqhJnv9uurX5g/viewform?usp=dialog')">
+  <a href="javascript:void(0);">Request A Game</a>
+</div>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <!-- Game Hub -->
+  <div class="container" id="gameHub">
+    <div class="link-box" onclick="loadIframe('https://symmetrical-waffle-7vwq7ppq5v4w2rvjg-43259.app.github.dev/')">
+      <a href="javascript:void(0);">Game</a>
+    </div>
+    <div class="link-box" onclick="loadIframe('https://quiz-50.guru')">
+      <a href="javascript:void(0);">Game</a>
+    </div>
+    <div class="link-box" onclick="loadIframe('https://orteil.dashnet.org')">
+      <a href="javascript:void(0);">Cookie</a>
+    </div>
+    <div class="link-box" onclick="openBlankTab('https://nova-raspy-truffle.glitch.me ')">
+      <a href="javascript:void(0);">Open</a>
+    </div>
+
+    <!-- Larger Iframe to display websites inside the page -->
+    <div class="iframe-container" id="iframeContainer">
+      <iframe id="iframe"></iframe>
+      <iframe src="https://symmetrical-waffle-7vwq7ppq5v4w2rvjg-43553.app.github.dev/" allowfullscreen allow="fullscreen"></iframe>
+
+    </div>
+
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBackToLogin()">Back to Login</button>
+  </div>
+  
+
+  <!-- Developer Tools -->
+  <div class="container" id="devHub">
+    <h2>Developer Mode</h2>
+    <div class="link-box" onclick="openBlankTab('https://symmetrical-waffle-7vwq7ppq5v4w2rvjg-43553.app.github.dev/')">
+  <a href="javascript:void(0);">Game</a>
+</div>
+    <button onclick="document.documentElement.requestFullscreen()">Enter Fullscreen</button>F
+    <div class="link-box" onclick="openFullscreenBlankTab('https://hahagames.com/')">
+  <a href="javascript:void(0);">Game</a>
+</div>
+    <div class="link-box" onclick="openBlankTab('https://www.youtube.com/embed/dQw4w9WgXcQ')">
+  <a href="javascript:void(0);">Game</a>
+</div>
+    <div class="dev-tools">
+      <h3>Open Custom URL in about:blank</h3>
+      <input type="text" id="customUrl" placeholder="https://example.com">
+      <br>
+      <button onclick="openCustomUrl()">Open in New Tab</button>
+    </div>
+
+    <!-- Back Button -->
+    <button class="back-button" onclick="goBackToLogin()">Back to Login</button>
+  </div>
+
+  <!-- Admin Tools -->
+  <div class="container" id="OP Extra's">
+    <h2>Admin Websites</h2>
+    <div class="link-box" onclick="openBlankTab('https://definitelyscience.com')">
+      <a href="javascript:void(0);">Extra Games </a>
+    </div>
+    <div class="link-box" onclick="openBlankTab('https://anura.pro/')">
+      <a href="javascript:void(0);">OMG OP </a>
+    </div>
+    <div class="link-box" onclick="openBlankTab(https://sites.google.com/view/drive-u-7-home/home?authuser=0)">
+      <a href="javascript:void(0);">Game 1 </a>
+    </div>
+    <div class="link-box" onclick="openBlankTab('https://sites.google.com/view/wagerzz/ext3nsi0n-r3m0ver?authuser=0')">
+      <a href="javascript:void(0);">Game 2 </a>
+    </div>
+    <div class="link-box" onclick="openBlankTab('https://www.mindsculptor.org/')">
+      <a href="javascript:void(0);">Game 3 </a>
+    </div>
+    <div class="dev-tools">
+      <h3>Open Custom URL in about:blank</h3>
+      <input type="text" id="custom-Url" placeholder="https://example.com">
+      <br>
+      <button onclick="openCustomUrl()">Open in New Tab</button>
+    </div>
+
+      <!-- Back Button -->
+    <button class="back-button" onclick="goBackToLogin()">Back to Login</button>
+  </div>
+  
+  <script>
+    function checkPassword() {
+      const input = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      if (input === "THEBESTSITE") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("gameHub").style.display = "block";
+      } else if (input === "Dev-mode") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("devHub").style.display = "block";
+        } else if (input === "OP-Extra's") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("OP Extra's").style.display = "block";
+        } else if (input === "OPSITE") {
+       openBlankTab('https://gg.interstaller-af.dynipv6.de/');  // Easter egg: opens the URL in a new about:blank tab
+            } else if (input === "MOVIES") {
+        openBlankTab('https://moviemaze.cc/explore/movie/');
+          } else if (input === "MINECRAFT") {
+        openBlankTab('https://eaglercraft.q13x.com/');  // Easter egg: opens the URL in a new about:blank tab
+            } else if (input === "bc") {
+        openBlankTab('https://studious-robot-wrxp956jxvjwc5g95-3006.app.github.dev/');
+        errorMsg.textContent = "Incorrect password. Try again.";
+      }
+    }
+
+    function loadIframe(url) {
+      const iframe = document.getElementById("iframe");
+      iframe.src = url; // Set iframe source to the clicked website URL
+    }
+
+    function openBlankTab(url) {
+      const win = window.open("about:blank", "_blank");
+      const iframe = win.document.createElement("iframe");
+      iframe.src = url;
+      iframe.style.border = "none";
+      iframe.style.width = "100vw";
+      iframe.style.height = "100vh";
+      win.document.body.style.margin = "0";
+      win.document.body.appendChild(iframe);
+    }
+
+    function openCustomUrl() {
+      const url = document.getElementById("customUrl").value;
+      if (!url) return alert("Please enter a URL.");
+      
+      // Open the URL in a new about:blank tab
+      const win = window.open("about:blank", "_blank");
+      const iframe = win.document.createElement("iframe");
+      iframe.src = url;
+      iframe.style.border = "none";
+      iframe.style.width = "100vw";
+      iframe.style.height = "100vh";
+      win.document.body.style.margin = "0";
+      win.document.body.appendChild(iframe);
+    }
+
+    function goBackToLogin() {
+      document.getElementById("gameHub").style.display = "none";
+      document.getElementById("OP Extra's").style.display = "none";
+      document.getElementById("devHub").style.display = "none";
+      document.getElementById("loginBox").style.display = "block";
+    }
+    
+     document.addEventListener("DOMContentLoaded", function () {
+
+  // Firebase Live User Counter
+  const firebaseConfig = {
+    apiKey: "AIzaSyAbRH_OqDb8OTeSrFpIcHw2LBV4a6nt-OE",
+    authDomain: "riddleleaderboard.firebaseapp.com",
+    databaseURL: "https://riddleleaderboard-default-rtdb.firebaseio.com",
+    projectId: "riddleleaderboard",
+    storageBucket: "riddleleaderboard.appspot.com",
+    messagingSenderId: "334700676707",
+    appId: "1:334700676707:web:be02d2a3517949192f9a56"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const connectionsRef = db.ref("/presence/connections");
+  const connectedRef = db.ref(".info/connected");
+
+  connectedRef.on("value", (snap) => {
+    if (snap.val() === true) {
+      const con = connectionsRef.push(true);
+      con.onDisconnect().remove();
+    }
+  });
+
+  connectionsRef.on("value", (snap) => {
+    const count = snap.numChildren();
+    const display = document.getElementById("online-users");
+    if (display) display.textContent = "🟢 Users Online: " + count;
+  });
+
+       
+  let inputSequence = [];
+  const konamiCode = [
+    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+    "b", "c"
+  ];
+
+  document.addEventListener("keydown", function (e) {
+    inputSequence.push(e.key);
+    inputSequence.splice(
+      -konamiCode.length - 1,
+      inputSequence.length - konamiCode.length
+    );
+
+    if (inputSequence.join("") === konamiCode.join("")) {
+      alert("🎉 Konami Code Activated!");
+      
+      const win = window.open("about:blank", "_blank");
+      const iframe = win.document.createElement("iframe");
+      iframe.src = "https://superficial-clear-bandana.glitch.me";
+      iframe.style.border = "none";
+      iframe.style.width = "100vw";
+      iframe.style.height = "100vh";
+      win.document.body.style.margin = "0";
+      win.document.body.appendChild(iframe);
+    }
+  });
+});
+
+    
+    document.addEventListener("DOMContentLoaded", function () {
+
+  // Firebase Live User Counter
+  const firebaseConfig = {
+    apiKey: "AIzaSyAbRH_OqDb8OTeSrFpIcHw2LBV4a6nt-OE",
+    authDomain: "riddleleaderboard.firebaseapp.com",
+    databaseURL: "https://riddleleaderboard-default-rtdb.firebaseio.com",
+    projectId: "riddleleaderboard",
+    storageBucket: "riddleleaderboard.appspot.com",
+    messagingSenderId: "334700676707",
+    appId: "1:334700676707:web:be02d2a3517949192f9a56"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const connectionsRef = db.ref("/presence/connections");
+  const connectedRef = db.ref(".info/connected");
+
+  connectedRef.on("value", (snap) => {
+    if (snap.val() === true) {
+      const con = connectionsRef.push(true);
+      con.onDisconnect().remove();
+    }
+  });
+
+  connectionsRef.on("value", (snap) => {
+    const count = snap.numChildren();
+    const display = document.getElementById("online-users");
+    if (display) display.textContent = "🟢 Users Online: " + count;
+  });
+
+      
+      const konamiCode = [
+    "ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight",
+    "b", "a"
+  ];
+
+  document.addEventListener("keydown", function (e) {
+    inputSequence.push(e.key);
+    inputSequence.splice(
+      -konamiCode.length - 1,
+      inputSequence.length - konamiCode.length
+    );
+
+    if (inputSequence.join("") === konamiCode.join("")) {
+      alert("🎉 Konami Code Activated!");
+      
+      const win = window.open("about:blank", "_blank");
+      const iframe = win.document.createElement("iframe");
+      iframe.src = "https://spectacular-attractive-gruyere.glitch.me/"; // Change this to your Easter egg
+      iframe.style.border = "none";
+      iframe.style.width = "100vw";
+      iframe.style.height = "100vh";
+      win.document.body.style.margin = "0";
+      win.document.body.appendChild(iframe);
+    }
+  });
+});
+
+
+    
+    function openBlankTab(url) {
+  const win = window.open("about:blank", "_blank");
+
+  // Basic layout setup
+  win.document.body.style.margin = "0";
+  win.document.body.style.overflow = "hidden";
+
+  // Add a button to enter fullscreen
+  const btn = win.document.createElement("button");
+  btn.innerText = "Click to Enter Fullscreen";
+  btn.style.position = "absolute";
+  btn.style.top = "20px";
+  btn.style.left = "20px";
+  btn.style.zIndex = "9999";
+  btn.style.padding = "10px 20px";
+  btn.style.fontSize = "16px";
+  btn.style.cursor = "pointer";
+
+  // Fullscreen logic
+  btn.onclick = function () {
+    iframe.requestFullscreen?.() || iframe.webkitRequestFullscreen?.();
+    btn.remove(); // remove button after fullscreen
+  };
+
+  // Create iframe
+  const iframe = win.document.createElement("iframe");
+  iframe.src = url;
+  iframe.style.border = "none";
+  iframe.style.width = "100vw";
+  iframe.style.height = "100vh";
+
+  // Append to new tab
+  win.document.body.appendChild(btn);
+  win.document.body.appendChild(iframe);
+}
+    // Keep track of click times
+  let clickTimes = [];
+
+  // Reference to the logo
+  const logo = document.getElementById("docs-logo");
+
+  if (logo) {
+    logo.addEventListener("click", () => {
+      const now = Date.now();
+      clickTimes.push(now);
+
+      // Keep only the last 3 clicks
+      if (clickTimes.length > 3) clickTimes.shift();
+
+      // If the 3 clicks happened within 600ms, trigger the game
+      if (clickTimes.length === 3 && clickTimes[2] - clickTimes[0] < 600) {
+        openMiniGame();
+        clickTimes = []; // reset
+      }
+    });
+  }
+
+
+    // Starry background animation
+function createStars(canvas, starCount = 100) {
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function randomRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.1 + 0.2,
+        alpha: Math.random(),
+        alphaChange: randomRange(0.002, 0.01),
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(star => {
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, 2 * Math.PI);
+      ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+      ctx.fill();
+
+      star.alpha += star.alphaChange;
+      if (star.alpha <= 0 || star.alpha >= 1) star.alphaChange = -star.alphaChange;
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initStars();
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  drawStars();
+}
+
+window.onload = function() {
+  // Announcement overlay logic
+  const overlay = document.getElementById('announcementOverlay');
+  const closeBtn = document.getElementById('closeAnnouncement');
+
+  if (overlay) overlay.style.display = 'block';
+
+  closeBtn.onclick = () => {
+    if (overlay) overlay.style.display = 'none';
+  };
+
+  // Star animation code
+  const canvas = document.getElementById("starCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  const layers = [
+    { count: 100, speed: 0.2, stars: [], color: 'rgba(255,255,255,0.2)' },
+    { count: 70, speed: 0.5, stars: [], color: 'rgba(255,255,255,0.5)' },
+    { count: 50, speed: 1.0, stars: [], color: 'white' }
+  ];
+
+  for (const layer of layers) {
+    for (let i = 0; i < layer.count; i++) {
+      layer.stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.5
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (const layer of layers) {
+      ctx.fillStyle = layer.color;
+      for (const star of layer.stars) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        star.y += layer.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      }
+    }
+
+    requestAnimationFrame(drawStars);
+  }
+
+  drawStars();
+};
+    
+   document.addEventListener("DOMContentLoaded", () => {
+  const hiddenBtn = document.createElement("div");
+  hiddenBtn.style.position = "fixed";
+  hiddenBtn.style.top = "10px";
+  hiddenBtn.style.left = "10px";
+  hiddenBtn.style.width = "50px";
+  hiddenBtn.style.height = "50px";
+  hiddenBtn.style.opacity = "0";
+  hiddenBtn.style.cursor = "pointer";
+  hiddenBtn.title = "Secret";
+
+  hiddenBtn.addEventListener("mouseover", () => {
+    hiddenBtn.style.opacity = "0.2";
+  });
+  hiddenBtn.addEventListener("mouseout", () => {
+    hiddenBtn.style.opacity = "0";
+  });
+
+  hiddenBtn.addEventListener("click", () => {
+    const win = window.open("about:blank", "_blank");
+    if (!win) {
+      alert("Popup blocked. Allow popups for this site.");
+      return;
+    }
+
+    const riddles = [
+      { q: "What has keys but can't open locks? (Every question including this has no a or an or the) NO CHEATING", a: "keyboard", code: "↑" },
+      { q: "What comes down but never goes up?", a: "rain", code: "↓" },
+      { q: "What has hands but can’t clap?", a: "clock", code: "↓" },
+      { q: "What can travel around the world while staying in the corner?", a: "stamp", code: "→" },
+      { q: "What has a head and a tail but no body?", a: "coin", code: "←" },
+      { q: "What has one eye but can’t see?", a: "needle", code: "→" },
+      { q: "What gets wetter the more it dries?", a: "towel", code: "←" },
+      { q: "What can fill a room but takes up no space?", a: "light", code: "↑" },
+      { q: "What is always in front of you but can’t be seen?", a: "the future", code: "B" },
+      { q: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?", a: "echo", code: "c" }
+    ];
+
+    win.document.write(`
+      <style>
+        body {
+          margin: 0;
+          background: #1d1;
+          font-family: sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          flex-direction: column;
+        }
+        .riddle-box {
+          text-align: center;
+          padding: 20px;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 0 20px rgba(0,0,0,0.3);
+          width: 90%;
+          max-width: 500px;
+        }
+        input {
+          margin-top: 10px;
+          padding: 8px;
+          width: 80%;
+        }
+        #popup {
+          position: fixed;
+          top: 20px;
+          background: #222;
+          color: #0f0;
+          padding: 10px 20px;
+          border-radius: 8px;
+          font-weight: bold;
+          display: none;
+        }
+      
+#online-users {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00f0ff;
+  text-align: center;
+  z-index: 9999;
+}
+
+
+#space-clock {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00f0ff;
+  border-radius: 12px;
+  padding: 10px 15px;
+  font-family: 'Courier New', monospace;
+  color: #00f0ff;
+  text-align: center;
+  box-shadow: 0 0 15px #00f0ff;
+  z-index: 9999;
+  user-select: none;
+}
+#clock {
+  font-size: 1.5em;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px #00f0ff;
+}
+#space-day {
+  font-size: 0.9em;
+  margin-top: 5px;
+  text-shadow: 0 0 5px #00f0ff;
+}
+
+</style>
+      <body>
+
+<div id="space-clock">
+  <div id="clock">--:--:--</div>
+  <div id="space-day">Loading...</div>
+</div>
+
+        <div id="popup"></div>
+        <div class="riddle-box">
+          <h2 id="riddle"></h2>
+          <input id="answer" placeholder="Type your answer..." />
+        </div>
+        <script>
+          const riddles = ${JSON.stringify(riddles)};
+          let index = 0;
+
+          const riddleEl = document.getElementById("riddle");
+          const input = document.getElementById("answer");
+          const popup = document.getElementById("popup");
+
+          function nextRiddle() {
+            if (index >= riddles.length) {
+              riddleEl.innerHTML = "Access Granted! Passcode: ↑ ↓ ↓ → ← → ← ↑ b c";
+              input.style.display = "none";
+              return;
+            }
+            riddleEl.textContent = riddles[index].q;
+            input.value = "";
+            input.focus();
+          }
+
+          input.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+              const correct = riddles[index].a.toLowerCase();
+              const given = input.value.trim().toLowerCase();
+              if (given === correct) {
+                popup.textContent = "Code " + (index + 1) + " of 10: " + riddles[index].code;
+                popup.style.display = "block";
+                setTimeout(() => {
+                  popup.style.display = "none";
+                  index++;
+                  nextRiddle();
+                }, 1500);
+              } else {
+                document.body.style.background = "#f00";
+                setTimeout(() => window.close(), 800);
+              }
+            }
+          });
+
+          nextRiddle();
+        <\/script>
+      </body>
+    `);
+  });
+
+  document.body.appendChild(hiddenBtn);
+});
+  
+  const canvas = document.getElementById("starCanvas2");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  const layers = [
+    { count: 100, speed: 0.2, stars: [], color: 'rgba(255,255,255,0.2)' },
+    { count: 70, speed: 0.5, stars: [], color: 'rgba(255,255,255,0.5)' },
+    { count: 50, speed: 1.0, stars: [], color: 'white' }
+  ];
+
+  for (const layer of layers) {
+    for (let i = 0; i < layer.count; i++) {
+      layer.stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.5
+      });
+    }
+  }
+
+  function animateStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const layer of layers) {
+      ctx.fillStyle = layer.color;
+      for (const star of layer.stars) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI);
+        ctx.fill();
+
+        star.y += layer.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      }
+    }
+    requestAnimationFrame(animateStars);
+  }
+
+  animateStars();
+    
+   
+function updateSpaceClock() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayName = weekdays[now.getDay()];
+  const dateNum = now.getDate();
+  document.getElementById("space-day").textContent = `${dayName}, ${dateNum}`;
+}
+setInterval(updateSpaceClock, 1000);
+updateSpaceClock();
+
+</script>
+
+
+<script>
+  const canvas = document.getElementById("starCanvas");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  const layers = [
+    { count: 100, speed: 0.2, stars: [], color: 'rgba(255,255,255,0.2)' },
+    { count: 70, speed: 0.5, stars: [], color: 'rgba(255,255,255,0.5)' },
+    { count: 50, speed: 1.0, stars: [], color: 'white' }
+  ];
+
+  for (const layer of layers) {
+    for (let i = 0; i < layer.count; i++) {
+      layer.stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.5
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (const layer of layers) {
+      ctx.fillStyle = layer.color;
+      for (const star of layer.stars) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fill();
+
+        star.y += layer.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      }
+    }
+
+    requestAnimationFrame(drawStars);
+  }
+
+  drawStars();
+  
+    document.addEventListener("mousemove", e => {
+    const trail = document.createElement("div");
+    trail.className = "cursor-trail";
+    trail.style.left = `${e.clientX}px`;
+    trail.style.top = `${e.clientY}px`;
+    document.body.appendChild(trail);
+    setTimeout(() => trail.remove(), 600);
+  });
+  
+  function updateSpaceClock() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayName = weekdays[now.getDay()];
+  const dateNum = now.getDate();
+  document.getElementById("space-day").textContent = `${dayName}, ${dateNum}`;
+}
+
+function openBlankTab(url) {
+  const win = window.open("about:blank", "_blank");
+  const doc = win.document;
+
+  // Basic setup
+  doc.body.style.margin = "0";
+  doc.body.style.overflow = "hidden";
+
+  // Create fullscreen button
+  const btn = doc.createElement("button");
+  btn.textContent = "Enter Fullscreen";
+  btn.style.position = "absolute";
+  btn.style.top = "20px";
+  btn.style.left = "20px";
+  btn.style.zIndex = "9999";
+  btn.style.padding = "10px 20px";
+  btn.style.fontSize = "16px";
+  btn.style.cursor = "pointer";
+
+  // Create iframe
+  const iframe = doc.createElement("iframe");
+  iframe.src = url;
+  iframe.style.width = "100vw";
+  iframe.style.height = "100vh";
+  iframe.style.border = "none";
+  iframe.setAttribute("allowfullscreen", "");
+  iframe.setAttribute("allow", "fullscreen");
+
+  // Fullscreen logic
+  btn.onclick = () => {
+    iframe.requestFullscreen?.() || iframe.webkitRequestFullscreen?.();
+    btn.remove(); // hide after entering fullscreen
+  };
+
+  // Append elements
+  doc.body.appendChild(btn);
+  doc.body.appendChild(iframe);
+}
+  function openBlankTab(url) {
+  const newWindow = window.open(url, '_blank');
+  if (newWindow) newWindow.focus();
+}
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyBn2O5XcjZz8bHbVv1A2GSQzVufVW2cvyI",
+    authDomain: "user-counter-2106f.firebaseapp.com",
+    databaseURL: "https://user-counter-2106f-default-rtdb.firebaseio.com",
+    projectId: "user-counter-2106f",
+    storageBucket: "user-counter-2106f.firebasestorage.app",
+    messagingSenderId: "714151996933",
+    appId: "1:714151996933:web:c18a5ed92ca6530168f66c",
+    measurementId: "G-BP63WQGTEW"
+  };
+  
+  firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const connectionsRef = db.ref("/presence/connections");
+    const connectedRef = db.ref(".info/connected");
+
+    connectedRef.on("value", (snap) => {
+      if (snap.val() === true) {
+        const con = connectionsRef.push(true);
+        con.onDisconnect().remove();
+      }
+    });
+
+    connectionsRef.on("value", (snap) => {
+      const count = snap.numChildren();
+      document.getElementById("online-users").textContent = "🟢 Users Online: " + count;
+    });
+  
+ 
+
+function updateSpaceClock() {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+  document.getElementById("clock").textContent = `${hours}:${minutes}:${seconds}`;
+
+  const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const dayName = weekdays[now.getDay()];
+  const dateNum = now.getDate();
+  document.getElementById("space-day").textContent = `${dayName}, ${dateNum}`;
+}
+setInterval(updateSpaceClock, 1000);
+updateSpaceClock();
+  
+  
+</script>
+
+<!-- Cutscene Intro -->
+<div id="cutsceneOverlay" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: #111;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #00ffff;
+  font-size: 5em;
+  overflow: hidden;
+">
+  <canvas id="cutsceneStars" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
+  <div id="cutsceneText" style="z-index:1; position: relative;"></div>
+  <div id="crossingLine" style="
+    position: absolute;
+    top: 0;
+    left: -120px;
+    width: 120px;
+    height: 100vh;
+    background: linear-gradient(180deg, #ff3c00, #ffdd00, #00ffd5);
+    z-index: 2;
+    opacity: 1;
+  "></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const cutsceneOverlay = document.getElementById("cutsceneOverlay");
+  const cutsceneText = document.getElementById("cutsceneText");
+  const crossingLine = document.getElementById("crossingLine");
+  const canvas = document.getElementById("cutsceneStars");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  // Star setup
+  let stars = Array.from({length:100}, () => ({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*1.5+0.5,
+    a: Math.random(),
+    ad: (Math.random()*0.02)-0.01
+  }));
+
+  function drawStars() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    stars.forEach(s => {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+      ctx.fill();
+      s.a += s.ad;
+      if(s.a <= 0 || s.a >= 1) s.ad *= -1;
+    });
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+
+  const words = ["Welcome", "to", "Version", "2.2"];
+  let index = 0;
+
+  // Animate line crossing from left to right with requestAnimationFrame and update text mid-way
+  function animateLineCrossing() {
+    return new Promise(resolve => {
+      const lineWidth = 120;
+      const screenWidth = window.innerWidth;
+      const duration = 800; // faster crossing (800ms)
+
+      crossingLine.style.transition = 'none';
+      crossingLine.style.left = `-${lineWidth}px`;
+      crossingLine.style.opacity = '1';
+
+      // Force reflow to reset transition
+      crossingLine.getBoundingClientRect();
+
+      let startTime = null;
+      let wordChanged = false;
+
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+
+        // Calculate position: from -lineWidth to screenWidth
+        const progress = Math.min(elapsed / duration, 1);
+        const posX = -lineWidth + progress * (screenWidth + lineWidth);
+
+        crossingLine.style.left = posX + "px";
+
+        // Change word at approx center of screen crossing
+        if (!wordChanged && progress >= 0.5) {
+          if (index < words.length) {
+            cutsceneText.textContent = words[index];
+            index++;
+          }
+          wordChanged = true;
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          crossingLine.style.opacity = '0';
+          setTimeout(() => resolve(), 200);
+        }
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  async function showWords() {
+    cutsceneText.textContent = words[0]; // show first word immediately
+    index = 1;
+    while (index < words.length) {
+      await animateLineCrossing();
+    }
+
+    // After last word, fade out overlay so user can see website
+    cutsceneOverlay.style.transition = 'opacity 1s ease';
+    cutsceneOverlay.style.opacity = '0';
+
+    setTimeout(() => cutsceneOverlay.remove(), 1000);
+  }
+
+  showWords();
+
+});
+</script>
+
+
+</body>
+</html>
