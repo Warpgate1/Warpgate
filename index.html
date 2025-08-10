@@ -660,12 +660,6 @@ updateSpaceClock();
   win.document.body.style.margin = "0";
   win.document.body.style.overflow = "hidden";
 
-  // Fullscreen logic
-  btn.onclick = function () {
-    iframe.requestFullscreen?.() || iframe.webkitRequestFullscreen?.();
-    btn.remove(); // remove button after fullscreen
-  };
-
   // Create iframe
   const iframe = win.document.createElement("iframe");
   iframe.src = url;
@@ -674,9 +668,9 @@ updateSpaceClock();
   iframe.style.height = "100vh";
 
   // Append to new tab
-  win.document.body.appendChild(btn);
   win.document.body.appendChild(iframe);
 }
+
     // Keep track of click times
   let clickTimes = [];
 
