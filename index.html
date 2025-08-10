@@ -660,17 +660,6 @@ updateSpaceClock();
   win.document.body.style.margin = "0";
   win.document.body.style.overflow = "hidden";
 
-  // Add a button to enter fullscreen
-  const btn = win.document.createElement("button");
-  btn.innerText = "Click to Enter Fullscreen";
-  btn.style.position = "absolute";
-  btn.style.top = "20px";
-  btn.style.left = "20px";
-  btn.style.zIndex = "9999";
-  btn.style.padding = "10px 20px";
-  btn.style.fontSize = "16px";
-  btn.style.cursor = "pointer";
-
   // Fullscreen logic
   btn.onclick = function () {
     iframe.requestFullscreen?.() || iframe.webkitRequestFullscreen?.();
